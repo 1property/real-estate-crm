@@ -1,37 +1,149 @@
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f9;
+/* Reset default styles */
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
-h1 {
-  text-align: center;
-  color: #333;
-  padding: 20px;
-}
-
-#data-container {
-  margin: 20px;
-  padding: 10px;
+/* Basic styling */
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
   background-color: #fff;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  color: #333;
 }
 
-.data-card {
-  padding: 15px;
-  border-bottom: 1px solid #ccc;
+/* Header styles */
+header {
+  background-color: #ff0000; /* Red */
+  color: white;
+  padding: 1rem;
 }
 
-.data-card:last-child {
-  border-bottom: none;
+nav ul {
+  list-style-type: none;
+  display: flex;
+  justify-content: center;
 }
 
-.data-card p {
-  margin: 5px 0;
+nav ul li {
+  margin: 0 20px;
 }
 
-.data-card .property-info {
+nav ul li a {
+  color: white;
+  text-decoration: none;
   font-weight: bold;
+  text-transform: uppercase;
+}
+
+nav ul li a:hover {
+  border-bottom: 2px solid white;
+}
+
+/* Hero Section */
+.hero {
+  background-color: #ff0000; /* Red */
+  color: white;
+  text-align: center;
+  padding: 5rem 2rem;
+}
+
+.hero h1 {
+  font-size: 3rem;
+}
+
+.hero p {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.hero button {
+  padding: 1rem 2rem;
+  background-color: white;
+  color: #ff0000; /* Red */
+  border: 2px solid #ff0000;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.hero button:hover {
+  background-color: #ff0000; /* Red */
+  color: white;
+}
+
+/* Section styles */
+section {
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+h2 {
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+}
+
+.service {
+  margin-bottom: 1.5rem;
+}
+
+.testimonial {
+  background-color: #f4f4f4;
+  margin: 1rem 0;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.testimonial p {
+  font-style: italic;
+}
+
+.testimonial h3 {
+  font-weight: bold;
+  color: #ff0000; /* Red */
+}
+
+/* Contact Form */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+input, textarea {
+  padding: 1rem;
+  font-size: 1rem;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+}
+
+input:focus, textarea:focus {
+  border-color: #ff0000; /* Red */
+}
+
+button[type="submit"] {
+  padding: 1rem 2rem;
+  background-color: #ff0000; /* Red */
+  color: white;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border-radius: 5px;
+}
+
+button[type="submit"]:hover {
+  background-color: #d40000; /* Darker Red */
+}
+
+/* Footer styles */
+footer {
+  background-color: #ff0000; /* Red */
+  color: white;
+  text-align: center;
+  padding: 1rem;
 }

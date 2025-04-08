@@ -1,82 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Real Estate CRM</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-  <script src="script.js" defer></script>
+  <title>Welcome to Nesh Property</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
 
-  <h1>Real Estate CRM</h1>
+  <!-- Header Section -->
+  <header>
+    <nav>
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#testimonials">Testimonials</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
 
-  <!-- Navigation for routing -->
-  <nav>
-    <button onclick="showPage('tablePage')">View Properties</button>
-    <button onclick="showPage('formPage')">Add Property</button>
-  </nav>
+  <!-- Hero Section -->
+  <section id="home" class="hero">
+    <h1>Welcome to Nesh Property</h1>
+    <p>Your trusted partner in finding the perfect home</p>
+    <button>Get Started</button>
+  </section>
 
-  <!-- Table Section (Page 1) -->
-  <div id="tablePage" class="page">
-    <h2>Properties List</h2>
-    <table border="1">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Phone</th>
-          <th>Email</th>
-          <th>Location</th>
-          <th>Property</th>
-          <th>Source</th>
-          <th>Follow-Up</th>
-          <th>Status</th>
-          <th>Notes</th>
-          <th>Next Follow-Up</th>
-        </tr>
-      </thead>
-      <tbody id="data-table-body">
-        <!-- Data will be inserted here -->
-      </tbody>
-    </table>
-  </div>
+  <!-- About Section -->
+  <section id="about">
+    <h2>About Us</h2>
+    <p>We are a leading property agency specializing in helping you find the home of your dreams.</p>
+  </section>
 
-  <!-- Add Property Section (Page 2) -->
-  <div id="formPage" class="page" style="display: none;">
-    <h2>Add New Property</h2>
-    <form id="addForm">
-      <label for="name">Name:</label>
-      <input type="text" id="name" required><br>
+  <!-- Services Section -->
+  <section id="services">
+    <h2>Our Services</h2>
+    <div class="service">
+      <h3>Property Listings</h3>
+      <p>Browse our exclusive property listings and find the perfect match for your needs.</p>
+    </div>
+    <div class="service">
+      <h3>Property Management</h3>
+      <p>We offer property management services to make your life easier.</p>
+    </div>
+  </section>
 
-      <label for="phone">Phone:</label>
-      <input type="text" id="phone" required><br>
+  <!-- Testimonials Section -->
+  <section id="testimonials">
+    <h2>What Our Clients Say</h2>
+    <div class="testimonial">
+      <p>"Nesh Property helped me find my dream home. The team was amazing to work with!"</p>
+      <h3>- Jane Doe</h3>
+    </div>
+    <div class="testimonial">
+      <p>"Highly recommend! Professional, efficient, and very helpful in every step of the process."</p>
+      <h3>- John Smith</h3>
+    </div>
+  </section>
 
-      <label for="email">Email:</label>
-      <input type="email" id="email" required><br>
+  <!-- Contact Section -->
+  <section id="contact">
+    <h2>Contact Us</h2>
+    <form>
+      <label for="name">Your Name</label>
+      <input type="text" id="name" name="name" required>
 
-      <label for="location">Location:</label>
-      <input type="text" id="location" required><br>
+      <label for="email">Your Email</label>
+      <input type="email" id="email" name="email" required>
 
-      <label for="property">Property:</label>
-      <input type="text" id="property" required><br>
+      <label for="message">Your Message</label>
+      <textarea id="message" name="message" required></textarea>
 
-      <label for="source">Source:</label>
-      <input type="text" id="source" required><br>
-
-      <label for="followUp">Follow-Up Date:</label>
-      <input type="date" id="followUp" required><br>
-
-      <label for="status">Status:</label>
-      <input type="text" id="status" required><br>
-
-      <label for="notes">Notes:</label>
-      <textarea id="notes"></textarea><br>
-
-      <button type="submit">Add Property</button>
+      <button type="submit">Send Message</button>
     </form>
-  </div>
+  </section>
+
+  <!-- Footer Section -->
+  <footer>
+    <p>&copy; 2025 Nesh Property</p>
+  </footer>
 
 </body>
+
 </html>
