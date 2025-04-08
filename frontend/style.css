@@ -1,0 +1,37 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+  padding: 20px;
+}
+
+#data-container {
+  margin: 20px;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.data-card {
+  padding: 15px;
+  border-bottom: 1px solid #ccc;
+}
+
+.data-card:last-child {
+  border-bottom: none;
+}
+
+.data-card p {
+  margin: 5px 0;
+}
+
+.data-card .property-info {
+  font-weight: bold;
+}
