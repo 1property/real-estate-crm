@@ -1,76 +1,41 @@
-/* Reset default styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* Basic styling */
 body {
   font-family: Arial, sans-serif;
-  line-height: 1.6;
-  background-color: white;
-  color: #333;
+  background-color: #f4f4f9;
+  margin: 0;
+  padding: 0;
 }
 
-/* Header styles */
-header {
-  background-color: #D32F2F; /* Red color */
-  color: white;
-  padding: 1rem;
-}
-
-nav ul {
-  list-style-type: none;
-  display: flex;
-  justify-content: center;
-}
-
-nav ul li {
-  margin: 0 20px;
-}
-
-nav ul li a {
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-  text-transform: uppercase;
-}
-
-nav ul li a:hover {
-  border-bottom: 2px solid white;
-}
-
-/* Hero Section */
-.hero {
-  background-color: #D32F2F; /* Red color */
-  color: white;
+h1 {
   text-align: center;
-  padding: 5rem 2rem;
+  color: #333;
+  padding: 20px;
 }
 
-.hero h1 {
-  font-size: 3rem;
+#data-container {
+  margin: 20px;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.hero p {
-  font-size: 1.5rem;
-  margin-bottom: 2rem;
+.data-card {
+  padding: 15px;
+  border-bottom: 1px solid #ccc;
 }
 
-.hero button {
-  padding: 1rem 2rem;
-  background-color: white;
-  color: #D32F2F; /* Red color */
-  border: 2px solid #D32F2F;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+.data-card:last-child {
+  border-bottom: none;
 }
 
-.hero button:hover {
-  background-color: #C2185B; /* Darker red */
-  color: white;
+.data-card p {
+  margin: 5px 0;
+}
+
+.data-card .property-info {
+  font-weight: bold;
+}
+
 }
 
 /* Section styles */
