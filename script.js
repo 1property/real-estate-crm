@@ -34,13 +34,15 @@ async function fetchData(query = '') {
     return;
   }
 
-  const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD
+  const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+  console.log('Today:', today); // Debugging log
 
   data.forEach((row) => {
-    console.log('Follow-up date:', row.followup); // Log each followup date
+    console.log('Follow-up date:', row.followup); // Log followup date
+
     const isFollowUpToday = row.followup && row.followup === today;
-    console.log('Is Follow-up Today:', isFollowUpToday); // Log the result of the comparison
-  
+    console.log('Is Follow-up Today:', isFollowUpToday); // Log whether the follow-up is today
+
     const tr = document.createElement('tr');
     tr.style.backgroundColor = isFollowUpToday ? '#fff3cd' : 'transparent'; // Highlight if today
 
