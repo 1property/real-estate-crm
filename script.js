@@ -75,11 +75,23 @@ document.getElementById('addForm').addEventListener('submit', async function (e)
     }
   }
 
-  // Clear form and refresh the table
-  document.getElementById('addForm').reset(); // Reset form fields
-  fetchData(); // Refresh data in table
-  showPage('tablePage'); // Show the table page
+  resetForm(); // Reset form after adding or updating
+  fetchData();
+  showPage('tablePage');
 });
+
+// Reset form fields after add or update
+function resetForm() {
+  document.getElementById('name').value = '';
+  document.getElementById('phone').value = '';
+  document.getElementById('email').value = '';
+  document.getElementById('location').value = '';
+  document.getElementById('property').value = '';
+  document.getElementById('source').value = '';
+  document.getElementById('followUp').value = '';
+  document.getElementById('status').value = '';
+  document.getElementById('notes').value = '';
+}
 
 // Edit property function
 async function editProperty(id) {
@@ -102,7 +114,7 @@ async function editProperty(id) {
   document.getElementById('notes').value = data.notes;
 
   currentEditingId = id; // Set the currentEditingId to the property being edited
-  showPage('formPage'); // Switch to form page for editing
+  showPage('formPage');
 }
 
 // Delete property function
@@ -114,7 +126,7 @@ async function deleteProperty(id) {
       alert('❌ Failed to delete: ' + error.message);
     } else {
       alert('✅ Property deleted!');
-      fetchData(); // Refresh the table after deletion
+      fetchData();
     }
   }
 }
@@ -129,6 +141,6 @@ function showPage(pageId) {
 
 // Initialize the page on DOM content loaded
 document.addEventListener('DOMContentLoaded', () => {
-  fetchData(); // Fetch and display data when page loads
-  showPage('tablePage'); // Show the table page
+  fetchData();
+  showPage('tablePage');
 });
