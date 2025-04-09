@@ -1,47 +1,116 @@
-/* General button styles */
+/* Global styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+h1 {
+  color: red;
+  text-align: center;
+  margin: 20px 0;
+}
+
+nav {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
 button {
-  padding: 8px 12px;
+  background-color: red;
+  color: white;
+  padding: 10px 20px;
   border: none;
-  font-size: 14px;
+  font-size: 16px;
   cursor: pointer;
-  margin-right: 5px;
+  margin: 10px;
 }
 
 button:hover {
-  opacity: 0.8;
+  background-color: #cc0000;
 }
 
-button:focus {
-  outline: none;
+/* Table Styles */
+.table-container {
+  max-width: 100%;
+  overflow-x: auto;
+  margin: 20px;
+  border-radius: 10px;
 }
 
-/* Edit button */
-button.edit {
-  background-color: green;
-  color: white;
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
 }
 
-/* Delete button */
-button.delete {
+table th, table td {
+  padding: 12px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+table th {
   background-color: red;
   color: white;
 }
 
-/* Table styles */
-table {
-  width: 100%;
-  border-collapse: collapse;
+table td {
+  background-color: #fff;
 }
 
-table, th, td {
-  border: 1px solid black;
+table tr:nth-child(even) td {
+  background-color: #f4f4f4;
 }
 
-th, td {
-  padding: 10px;
-  text-align: left;
+table td button {
+  background-color: #f44336;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
 }
 
-th {
-  background-color: #f2f2f2;
+table td button:hover {
+  background-color: #e31b0c;
+}
+
+/* Form Styles */
+form {
+  text-align: center;
+  margin: 20px;
+}
+
+form label {
+  font-weight: bold;
+}
+
+form input, form textarea {
+  padding: 8px;
+  margin: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+form button {
+  background-color: red;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
+}
+
+form button:hover {
+  background-color: #cc0000;
+}
+
+.page {
+  display: none;
 }
