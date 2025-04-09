@@ -79,4 +79,113 @@ async function fetchData(query = '') {
     data = data.filter((row) => {
       return (
         row.name.toLowerCase().includes(query.toLowerCase()) ||
-        row.location.toLower
+        row.location.toLowerCase().includes(query.toLowerCase()) ||
+        row.status.toLowerCase().includes(query.toLowerCase())
+      );
+    });
+  }
+
+  const tableBody = document.getElementById('data-table-body');
+  tableBody.innerHTML = '';
+
+  data.forEach((row) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${row.name}</td>
+      <td>${row.phone}</td>
+      <td>${row.email}</td>
+      <td>${row.location}</td>
+      <td>${row.property}</td>
+      <td>${row.source}</td>
+      <td>${row.followUp}</td>
+      <td>${row.status}</td>
+      <td>${row.notes}</td>
+      <td>${row.nextFollowUp}</td>
+      <td>
+        <button onclick="editProperty(${row.id})">Edit</button>
+        <button onclick="deleteProperty(${row.id})">Delete</button>
+      </td>
+    `;
+    tableBody.appendChild(tr);
+  });
+}
+
+// Search properties
+function searchProperties() {
+  const query = document.getElementById('searchInput').value;
+  fetchData(query);
+}
+
+// Edit property
+async function editProperty(id) {
+  const { data, error } = await supabaseClient
+    .from(tableName)
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (error) {
+    alert('❌ Failed to fetch property data: ' + error.message);
+    return;
+  }
+
+  document.getElementById('recordId').value = data.id;
+  document.getElementById('name').value = data.name;
+  document.getElementById('phone').value = data.phone;
+  document.getElementById('email').value = data.email;
+  document.getElementById('location').value = data.location;
+  document.getElementById('property').value = data.property;
+  document.getElementById('source').value = data.source;
+  document.getElementById('followUp').value = data.followUp;
+  document.getElementById('status').value = data.status;
+  document.getElementById('notes').value = data.notes;
+  showPage('formPage');
+}
+
+// Delete property
+async function deleteProperty(id) {
+  const { error } = await supabaseClient.from(tableName).delete().eq('id', id);
+
+  if (error) {
+    alert('❌ Failed to delete property: ' + error.message);
+  } else {
+    alert('✅ Property deleted successfully!');
+    fetchData(); // Refresh table data
+  }
+}
+
+// Handle adding/editing property form submission
+document.getElementById('addForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const id = document.getElementById('recordId').value;
+  const name = document.getElementById('name').value;
+  const phone = document.getElementById('phone').value;
+  const email = document.getElementById('email').value;
+  const location = document.getElementById('location').value;
+  const property = document.getElementById('property').value;
+  const source = document.getElementById('source').value;
+  const followUp = document.getElementById('followUp').value;
+  const status = document.getElementById('status').value;
+  const notes = document.getElementById('notes').value;
+
+  let error;
+  if (id) {
+    const { error } = await supabaseClient
+      .from(tableName)
+      .update({ name, phone, email, location, property, source, followUp, status, notes })
+      .eq('id', id);
+  } else {
+    const { error } = await supabaseClient
+      .from(tableName)
+      .insert([{ name, phone, email, location, property, source, followUp, status, notes }]);
+  }
+
+  if (error) {
+    alert('❌ Failed to save property: ' + error.message);
+  } else {
+    alert('✅ Property saved successfully!');
+    showPage('tablePage');
+    fetchData(); // Refresh table data
+  }
+});
