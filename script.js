@@ -29,6 +29,11 @@ async function fetchData() {
       <td>${row.status}</td>
       <td>${row.notes}</td>
       <td>${row.followup || ''}</td>
+      <td>
+        <!-- Edit and Delete Buttons -->
+        <button class="edit" onclick="editProperty(${row.id})">Edit</button>
+        <button class="delete" onclick="deleteProperty(${row.id})">Delete</button>
+      </td>
     `;
     tableBody.appendChild(tr);
   });
@@ -63,23 +68,85 @@ document.getElementById('addForm').addEventListener('submit', async function (e)
 
 // Show and hide pages based on the page ID
 function showPage(pageId) {
-  // Get all pages
   const pages = document.querySelectorAll('.page');
   
-  // Hide all pages
   pages.forEach(page => {
     page.style.display = 'none';
   });
   
-  // Show the selected page
   const selectedPage = document.getElementById(pageId);
   if (selectedPage) {
     selectedPage.style.display = 'block';
   }
 }
 
+// Edit property functionality
+async function editProperty(id) {
+  const { data, error } = await supabaseClient.from(tableName).select('*').eq('id', id).single();
+
+  if (error) {
+    alert('Error loading data for editing: ' + error.message);
+    return;
+  }
+
+  document.getElementById('name').value = data.name;
+  document.getElementById('phone').value = data.phone;
+  document.getElementById('email').value = data.email;
+  document.getElementById('location').value = data.location;
+  document.getElementById('property').value = data.property;
+  document.getElementById('source').value = data.source;
+  document.getElementById('followUp').value = data.followup;
+  document.getElementById('status').value = data.status;
+  document.getElementById('notes').value = data.notes;
+
+  const addForm = document.getElementById('addForm');
+  addForm.onsubmit = async (e) => {
+    e.preventDefault();
+
+    const updatedData = {
+      name: document.getElementById('name').value,
+      phone: document.getElementById('phone').value,
+      email: document.getElementById('email').value,
+      location: document.getElementById('location').value,
+      property: document.getElementById('property').value,
+      source: document.getElementById('source').value,
+      followup: document.getElementById('followUp').value,
+      status: document.getElementById('status').value,
+      notes: document.getElementById('notes').value
+    };
+
+    const { error } = await supabaseClient.from(tableName).update(updatedData).eq('id', id);
+
+    if (error) {
+      alert('❌ Failed to update: ' + error.message);
+    } else {
+      alert('✅ Property updated!');
+      fetchData();
+      showPage('tablePage');
+    }
+  };
+
+  showPage('formPage');
+}
+
+// Delete property functionality
+async function deleteProperty(id) {
+  const confirmation = confirm('Are you sure you want to delete this property?');
+
+  if (confirmation) {
+    const { error } = await supabaseClient.from(tableName).delete().eq('id', id);
+
+    if (error) {
+      alert('❌ Failed to delete: ' + error.message);
+    } else {
+      alert('✅ Property deleted!');
+      fetchData(); // Refresh the table after deletion
+    }
+  }
+}
+
 // Initially load the table page
 document.addEventListener('DOMContentLoaded', () => {
   fetchData();
-  showPage('tablePage'); // Show table page by default
+  showPage('tablePage');
 });
