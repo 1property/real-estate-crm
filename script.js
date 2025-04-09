@@ -8,13 +8,30 @@ const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
 let currentEditingId = null; // Track the current editing ID
 
 // Fetch data from Supabase and populate the table
-async function fetchData() {
-  const { data, error } = await supabaseClient.from(tableName).select('*');
+async function fetchData(query = '') {
+  let { data, error } = await supabaseClient.from(tableName).select('*');
+
+  if (error) {
+    alert('❌ Failed to load data: ' + error.message);
+    return;
+  }
+
+  if (query) {
+    // Filter the data based on the search query
+    data = data.filter((row) => {
+      return (
+        row.name.toLowerCase().includes(query.toLowerCase()) ||
+        row.location.toLowerCase().includes(query.toLowerCase()) ||
+        row.status.toLowerCase().includes(query.toLowerCase())
+      );
+    });
+  }
+
   const tableBody = document.getElementById('data-table-body');
   tableBody.innerHTML = '';
 
-  if (error) {
-    tableBody.innerHTML = '<tr><td colspan="10">Error loading data.</td></tr>';
+  if (data.length === 0) {
+    tableBody.innerHTML = '<tr><td colspan="10">No matching properties found.</td></tr>';
     return;
   }
 
@@ -76,7 +93,7 @@ document.getElementById('addForm').addEventListener('submit', async function (e)
   }
 
   resetForm(); // Reset form after adding or updating
-  fetchData();
+  fetchData(); // Refresh the table data
   showPage('tablePage');
 });
 
@@ -126,9 +143,15 @@ async function deleteProperty(id) {
       alert('❌ Failed to delete: ' + error.message);
     } else {
       alert('✅ Property deleted!');
-      fetchData();
+      fetchData(); // Refresh the table data
     }
   }
+}
+
+// Search properties function
+function searchProperties() {
+  const query = document.getElementById('searchInput').value;
+  fetchData(query); // Fetch data with search query
 }
 
 // Show the correct page (form or table)
@@ -141,6 +164,6 @@ function showPage(pageId) {
 
 // Initialize the page on DOM content loaded
 document.addEventListener('DOMContentLoaded', () => {
-  fetchData();
+  fetchData(); // Load initial data
   showPage('tablePage');
 });
