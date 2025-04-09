@@ -1,73 +1,66 @@
 body {
   font-family: Arial, sans-serif;
   margin: 20px;
-  background-color: #ffffff;
+  background-color: white;
   color: #333;
 }
 
 h1, h2 {
-  color: #d00000;
-  text-align: center;
+  color: red;
 }
 
 nav {
-  text-align: center;
   margin-bottom: 20px;
 }
 
 button {
-  background-color: #d00000;
+  background-color: red;
   color: white;
   border: none;
-  padding: 10px 20px;
-  margin: 5px;
-  border-radius: 6px;
+  padding: 10px 16px;
+  margin-right: 10px;
+  border-radius: 5px;
   cursor: pointer;
-  font-size: 16px;
-  transition: background 0.3s ease;
 }
 
 button:hover {
-  background-color: #ff4d4d;
+  background-color: darkred;
 }
 
-.table-container {
+.page {
+  margin-top: 20px;
+}
+
+/* Responsive table wrapper */
+#tablePage {
   overflow-x: auto;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
-  background-color: #fff;
+  min-width: 600px;
 }
 
 th, td {
-  border: 1px solid #ddd;
   padding: 10px;
   text-align: left;
-  font-size: 14px;
+  border: 1px solid red;
+  background-color: white;
 }
 
 th {
-  background-color: #d00000;
+  background-color: red;
   color: white;
 }
 
-tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
+@media (max-width: 768px) {
+  table {
+    font-size: 14px;
+  }
 
-form {
-  max-width: 600px;
-  margin: auto;
-}
-
-input, textarea {
-  width: 100%;
-  padding: 8px;
-  margin: 6px 0 12px;
-  box-sizing: border-box;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  button {
+    width: 100%;
+    margin-top: 10px;
+  }
 }
