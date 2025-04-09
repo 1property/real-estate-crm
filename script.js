@@ -34,20 +34,41 @@ async function fetchData(query = '') {
     return;
   }
 
-  const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
-  console.log('Today:', today); // Debugging log
+  const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD
+
+async function fetchData(query = '') {
+  let { data, error } = await supabaseClient.from(tableName).select('*');
+
+  if (error) {
+    alert('❌ Failed to load data: ' + error.message);
+    return;
+  }
+
+  if (query) {
+    data = data.filter((row) => {
+      return (
+        row.name.toLowerCase().includes(query.toLowerCase()) ||
+        row.location.toLowerCase().includes(query.toLowerCase()) ||
+        row.status.toLowerCase().includes(query.toLowerCase())
+      );
+    });
+  }
+
+  const tableBody = document.getElementById('data-table-body');
+  tableBody.innerHTML = '';
+
+  if (data.length === 0) {
+    tableBody.innerHTML = '<tr><td colspan="10">No matching properties found.</td></tr>';
+    return;
+  }
 
   data.forEach((row) => {
-    console.log('Follow-up date:', row.followup); // Log followup date
-
-    const isFollowUpToday = row.followup && row.followup === today;
-    console.log('Is Follow-up Today:', isFollowUpToday); // Log whether the follow-up is today
-
+    const isFollowUpToday = row.followup === today; // Check if follow-up date is today
     const tr = document.createElement('tr');
     tr.style.backgroundColor = isFollowUpToday ? '#fff3cd' : 'transparent'; // Highlight if today
 
     if (isFollowUpToday) {
-      showFollowUpNotification(row);
+      showFollowUpNotification(row); // Show notification if follow-up is today
     }
 
     tr.innerHTML = `
@@ -70,22 +91,23 @@ async function fetchData(query = '') {
   });
 }
 
-// Show browser follow-up notification
+// Show follow-up notification if it's today's date
 function showFollowUpNotification(row) {
   if (Notification.permission === 'granted') {
     new Notification(`📌 Follow-up Today`, {
-      body: `${row.name} (${row.phone}) - ${row.notes || 'No notes'}`
+      body: `${row.name} (${row.phone}) - ${row.notes || 'No notes'}`,
     });
   } else if (Notification.permission !== 'denied') {
     Notification.requestPermission().then((permission) => {
       if (permission === 'granted') {
         new Notification(`📌 Follow-up Today`, {
-          body: `${row.name} (${row.phone}) - ${row.notes || 'No notes'}`
+          body: `${row.name} (${row.phone}) - ${row.notes || 'No notes'}`,
         });
       }
     });
   }
 }
+
 
 // Handle form submission for both adding and updating properties
 document.getElementById('addForm').addEventListener('submit', async function (e) {
