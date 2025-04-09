@@ -37,10 +37,12 @@ async function fetchData(query = '') {
   const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD
 
   data.forEach((row) => {
-    const tr = document.createElement('tr');
-
+    console.log('Follow-up date:', row.followup); // Log each followup date
     const isFollowUpToday = row.followup && row.followup === today;
-    tr.style.backgroundColor = isFollowUpToday ? '#fff3cd' : 'transparent';
+    console.log('Is Follow-up Today:', isFollowUpToday); // Log the result of the comparison
+  
+    const tr = document.createElement('tr');
+    tr.style.backgroundColor = isFollowUpToday ? '#fff3cd' : 'transparent'; // Highlight if today
 
     if (isFollowUpToday) {
       showFollowUpNotification(row);
