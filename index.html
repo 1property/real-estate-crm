@@ -12,11 +12,42 @@
 <body>
   <h1 style="color: red; text-align: center;">Real Estate CRM</h1>
 
-  <!-- Navigation -->
-  <nav style="text-align: center;">
-    <button onclick="showPage('tablePage')" style="background-color: red; color: white; padding: 10px 20px;">View Properties</button>
-    <button onclick="showPage('formPage')" style="background-color: red; color: white; padding: 10px 20px;">Add Property</button>
-  </nav>
+  <!-- Authentication Section -->
+  <div id="authPage" style="text-align: center;">
+    <button onclick="showPage('loginPage')" style="background-color: red; color: white; padding: 10px 20px;">Login</button>
+    <button onclick="showPage('signupPage')" style="background-color: red; color: white; padding: 10px 20px;">Sign Up</button>
+  </div>
+
+  <!-- Login Page -->
+  <div id="loginPage" class="page" style="display: none; text-align: center;">
+    <h2>Login</h2>
+    <form id="loginForm">
+      <input type="email" id="loginEmail" placeholder="Email" required /><br />
+      <input type="password" id="loginPassword" placeholder="Password" required /><br />
+      <button type="submit" style="background-color: red; color: white; padding: 10px 20px;">Login</button>
+    </form>
+    <button onclick="showPage('signupPage')" style="background-color: red; color: white; padding: 10px 20px;">Don't have an account? Sign Up</button>
+  </div>
+
+  <!-- Sign-Up Page -->
+  <div id="signupPage" class="page" style="display: none; text-align: center;">
+    <h2>Sign Up</h2>
+    <form id="signupForm">
+      <input type="email" id="signupEmail" placeholder="Email" required /><br />
+      <input type="password" id="signupPassword" placeholder="Password" required /><br />
+      <button type="submit" style="background-color: red; color: white; padding: 10px 20px;">Sign Up</button>
+    </form>
+    <button onclick="showPage('loginPage')" style="background-color: red; color: white; padding: 10px 20px;">Already have an account? Login</button>
+  </div>
+
+  <!-- Navigation (after login) -->
+  <div id="navPage" class="page" style="display: none;">
+    <nav style="text-align: center;">
+      <button onclick="showPage('tablePage')" style="background-color: red; color: white; padding: 10px 20px;">View Properties</button>
+      <button onclick="showPage('formPage')" style="background-color: red; color: white; padding: 10px 20px;">Add Property</button>
+      <button onclick="logout()" style="background-color: red; color: white; padding: 10px 20px;">Log Out</button>
+    </nav>
+  </div>
 
   <!-- Table Page -->
   <div id="tablePage" class="page">
@@ -54,34 +85,24 @@
     <h2 style="color: red; text-align: center;">Add / Edit Property</h2>
     <form id="addForm" style="text-align: center;">
       <input type="hidden" id="recordId" />
-
       <label>Name:</label><br />
       <input type="text" id="name" required /><br />
-
       <label>Phone:</label><br />
       <input type="text" id="phone" required /><br />
-
       <label>Email:</label><br />
       <input type="email" id="email" required /><br />
-
       <label>Location:</label><br />
       <input type="text" id="location" required /><br />
-
       <label>Property:</label><br />
       <input type="text" id="property" required /><br />
-
       <label>Source:</label><br />
       <input type="text" id="source" required /><br />
-
       <label>Follow-Up:</label><br />
       <input type="date" id="followUp" required /><br />
-
       <label>Status:</label><br />
       <input type="text" id="status" required /><br />
-
       <label>Notes:</label><br />
       <textarea id="notes" required></textarea><br />
-
       <button type="submit" style="background-color: red; color: white; padding: 10px 20px;">Save Property</button>
     </form>
   </div>

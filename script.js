@@ -5,9 +5,68 @@ const tableName = 'callproperty';
 const { createClient } = supabase;
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-let currentEditingId = null; // Track the current editing ID
+// Track authentication state
+let user = null;
 
-// Fetch data from Supabase and populate the table
+// Listen for authentication state changes
+supabaseClient.auth.onAuthStateChange((event, session) => {
+  user = session?.user;
+  if (user) {
+    showPage('navPage');
+    fetchData(); // Fetch data after login
+  } else {
+    showPage('authPage');
+  }
+});
+
+// Show page function
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach((page) => {
+    page.style.display = 'none';
+  });
+  document.getElementById(pageId).style.display = 'block';
+}
+
+// Sign Up
+document.getElementById('signupForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('signupEmail').value;
+  const password = document.getElementById('signupPassword').value;
+
+  const { user, error } = await supabaseClient.auth.signUp({ email, password });
+
+  if (error) {
+    alert('❌ Failed to sign up: ' + error.message);
+  } else {
+    alert('✅ Sign-up successful!');
+    showPage('loginPage');
+  }
+});
+
+// Login
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPassword').value;
+
+  const { user, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+  if (error) {
+    alert('❌ Login failed: ' + error.message);
+  } else {
+    alert('✅ Login successful!');
+    showPage('navPage');
+    fetchData(); // Fetch data after login
+  }
+});
+
+// Logout
+function logout() {
+  supabaseClient.auth.signOut();
+  showPage('authPage');
+}
+
+// Fetch data and populate the table
 async function fetchData(query = '') {
   let { data, error } = await supabaseClient.from(tableName).select('*');
 
@@ -17,153 +76,7 @@ async function fetchData(query = '') {
   }
 
   if (query) {
-    // Filter the data based on the search query
     data = data.filter((row) => {
       return (
         row.name.toLowerCase().includes(query.toLowerCase()) ||
-        row.location.toLowerCase().includes(query.toLowerCase()) ||
-        row.status.toLowerCase().includes(query.toLowerCase())
-      );
-    });
-  }
-
-  const tableBody = document.getElementById('data-table-body');
-  tableBody.innerHTML = '';
-
-  if (data.length === 0) {
-    tableBody.innerHTML = '<tr><td colspan="10">No matching properties found.</td></tr>';
-    return;
-  }
-
-  data.forEach((row) => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${row.name}</td>
-      <td>${row.phone}</td>
-      <td>${row.email}</td>
-      <td>${row.location}</td>
-      <td>${row.property}</td>
-      <td>${row.source}</td>
-      <td>${row.followup || ''}</td>
-      <td>${row.status}</td>
-      <td>${row.notes}</td>
-      <td>${row.followup || ''}</td>
-      <td>
-        <button class="edit" onclick="editProperty(${row.id})">Edit</button>
-        <button class="delete" onclick="deleteProperty(${row.id})">Delete</button>
-      </td>
-    `;
-    tableBody.appendChild(tr);
-  });
-}
-
-// Handle form submission for both adding and updating properties
-document.getElementById('addForm').addEventListener('submit', async function (e) {
-  e.preventDefault();
-
-  const formData = {
-    name: document.getElementById('name').value,
-    phone: document.getElementById('phone').value,
-    email: document.getElementById('email').value,
-    location: document.getElementById('location').value,
-    property: document.getElementById('property').value,
-    source: document.getElementById('source').value,
-    followup: document.getElementById('followUp').value,
-    status: document.getElementById('status').value,
-    notes: document.getElementById('notes').value
-  };
-
-  if (currentEditingId) {
-    // Update the existing record
-    const { error } = await supabaseClient.from(tableName).update(formData).eq('id', currentEditingId);
-    if (error) {
-      alert('❌ Failed to update: ' + error.message);
-    } else {
-      alert('✅ Property updated!');
-    }
-    currentEditingId = null; // Reset the current editing ID after update
-  } else {
-    // Insert a new property
-    const { error } = await supabaseClient.from(tableName).insert([formData]);
-    if (error) {
-      alert('❌ Failed to insert: ' + error.message);
-    } else {
-      alert('✅ Property added!');
-    }
-  }
-
-  resetForm(); // Reset form after adding or updating
-  fetchData(); // Refresh the table data
-  showPage('tablePage');
-});
-
-// Reset form fields after add or update
-function resetForm() {
-  document.getElementById('name').value = '';
-  document.getElementById('phone').value = '';
-  document.getElementById('email').value = '';
-  document.getElementById('location').value = '';
-  document.getElementById('property').value = '';
-  document.getElementById('source').value = '';
-  document.getElementById('followUp').value = '';
-  document.getElementById('status').value = '';
-  document.getElementById('notes').value = '';
-}
-
-// Edit property function
-async function editProperty(id) {
-  const { data, error } = await supabaseClient.from(tableName).select('*').eq('id', id).single();
-
-  if (error) {
-    alert('Error loading data for editing: ' + error.message);
-    return;
-  }
-
-  // Populate form fields with the existing data
-  document.getElementById('name').value = data.name;
-  document.getElementById('phone').value = data.phone;
-  document.getElementById('email').value = data.email;
-  document.getElementById('location').value = data.location;
-  document.getElementById('property').value = data.property;
-  document.getElementById('source').value = data.source;
-  document.getElementById('followUp').value = data.followup;
-  document.getElementById('status').value = data.status;
-  document.getElementById('notes').value = data.notes;
-
-  currentEditingId = id; // Set the currentEditingId to the property being edited
-  showPage('formPage');
-}
-
-// Delete property function
-async function deleteProperty(id) {
-  const confirmDelete = confirm('Are you sure you want to delete this property?');
-  if (confirmDelete) {
-    const { error } = await supabaseClient.from(tableName).delete().eq('id', id);
-    if (error) {
-      alert('❌ Failed to delete: ' + error.message);
-    } else {
-      alert('✅ Property deleted!');
-      fetchData(); // Refresh the table data
-    }
-  }
-}
-
-// Search properties function
-function searchProperties() {
-  const query = document.getElementById('searchInput').value;
-  fetchData(query); // Fetch data with search query
-}
-
-// Show the correct page (form or table)
-function showPage(pageId) {
-  document.querySelectorAll('.page').forEach((page) => {
-    page.style.display = 'none';
-  });
-  document.getElementById(pageId).style.display = 'block';
-}
-
-// Initialize the page on DOM content loaded
-document.addEventListener('DOMContentLoaded', () => {
-  fetchData(); // Load initial data
-  showPage('tablePage');
-});
+        row.location.toLower
