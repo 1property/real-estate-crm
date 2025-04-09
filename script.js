@@ -5,7 +5,9 @@ const tableName = 'callproperty';
 const { createClient } = supabase;
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// Fetch data and display it in the table
+let currentEditingId = null; // Track if editing
+
+// Fetch data
 async function fetchData() {
   const { data, error } = await supabaseClient.from(tableName).select('*');
   const tableBody = document.getElementById('data-table-body');
@@ -30,7 +32,6 @@ async function fetchData() {
       <td>${row.notes}</td>
       <td>${row.followup || ''}</td>
       <td>
-        <!-- Edit and Delete Buttons -->
         <button class="edit" onclick="editProperty(${row.id})">Edit</button>
         <button class="delete" onclick="deleteProperty(${row.id})">Delete</button>
       </td>
@@ -39,11 +40,11 @@ async function fetchData() {
   });
 }
 
-// Handle form submission for adding a new property
+// Handle form submission (both add & update)
 document.getElementById('addForm').addEventListener('submit', async function (e) {
   e.preventDefault();
 
-  const data = {
+  const formData = {
     name: document.getElementById('name').value,
     phone: document.getElementById('phone').value,
     email: document.getElementById('email').value,
@@ -55,32 +56,30 @@ document.getElementById('addForm').addEventListener('submit', async function (e)
     notes: document.getElementById('notes').value
   };
 
-  const { error } = await supabaseClient.from(tableName).insert([data]);
-
-  if (error) {
-    alert('❌ Failed to insert: ' + error.message);
+  if (currentEditingId) {
+    // Update
+    const { error } = await supabaseClient.from(tableName).update(formData).eq('id', currentEditingId);
+    if (error) {
+      alert('❌ Failed to update: ' + error.message);
+    } else {
+      alert('✅ Property updated!');
+    }
+    currentEditingId = null; // Reset
   } else {
-    alert('✅ Property added!');
-    fetchData(); // Refresh the table
-    showPage('tablePage'); // Switch to the table page after adding the property
+    // Add new
+    const { error } = await supabaseClient.from(tableName).insert([formData]);
+    if (error) {
+      alert('❌ Failed to insert: ' + error.message);
+    } else {
+      alert('✅ Property added!');
+    }
   }
+
+  fetchData();
+  showPage('tablePage');
 });
 
-// Show and hide pages based on the page ID
-function showPage(pageId) {
-  const pages = document.querySelectorAll('.page');
-  
-  pages.forEach(page => {
-    page.style.display = 'none';
-  });
-  
-  const selectedPage = document.getElementById(pageId);
-  if (selectedPage) {
-    selectedPage.style.display = 'block';
-  }
-}
-
-// Edit property functionality
+// Edit
 async function editProperty(id) {
   const { data, error } = await supabaseClient.from(tableName).select('*').eq('id', id).single();
 
@@ -89,6 +88,7 @@ async function editProperty(id) {
     return;
   }
 
+  // Fill form
   document.getElementById('name').value = data.name;
   document.getElementById('phone').value = data.phone;
   document.getElementById('email').value = data.email;
@@ -99,53 +99,33 @@ async function editProperty(id) {
   document.getElementById('status').value = data.status;
   document.getElementById('notes').value = data.notes;
 
-  const addForm = document.getElementById('addForm');
-  addForm.onsubmit = async (e) => {
-    e.preventDefault();
-
-    const updatedData = {
-      name: document.getElementById('name').value,
-      phone: document.getElementById('phone').value,
-      email: document.getElementById('email').value,
-      location: document.getElementById('location').value,
-      property: document.getElementById('property').value,
-      source: document.getElementById('source').value,
-      followup: document.getElementById('followUp').value,
-      status: document.getElementById('status').value,
-      notes: document.getElementById('notes').value
-    };
-
-    const { error } = await supabaseClient.from(tableName).update(updatedData).eq('id', id);
-
-    if (error) {
-      alert('❌ Failed to update: ' + error.message);
-    } else {
-      alert('✅ Property updated!');
-      fetchData();
-      showPage('tablePage');
-    }
-  };
-
+  currentEditingId = id; // Set to edit mode
   showPage('formPage');
 }
 
-// Delete property functionality
+// Delete
 async function deleteProperty(id) {
-  const confirmation = confirm('Are you sure you want to delete this property?');
-
-  if (confirmation) {
+  const confirmDelete = confirm('Are you sure you want to delete this?');
+  if (confirmDelete) {
     const { error } = await supabaseClient.from(tableName).delete().eq('id', id);
-
     if (error) {
       alert('❌ Failed to delete: ' + error.message);
     } else {
-      alert('✅ Property deleted!');
-      fetchData(); // Refresh the table after deletion
+      alert('✅ Deleted!');
+      fetchData();
     }
   }
 }
 
-// Initially load the table page
+// Show correct page
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach((page) => {
+    page.style.display = 'none';
+  });
+  document.getElementById(pageId).style.display = 'block';
+}
+
+// Init
 document.addEventListener('DOMContentLoaded', () => {
   fetchData();
   showPage('tablePage');
