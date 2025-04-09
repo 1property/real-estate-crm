@@ -75,8 +75,10 @@ document.getElementById('addForm').addEventListener('submit', async function (e)
     }
   }
 
-  fetchData();
-  showPage('tablePage');
+  // Clear form and refresh the table
+  document.getElementById('addForm').reset(); // Reset form fields
+  fetchData(); // Refresh data in table
+  showPage('tablePage'); // Show the table page
 });
 
 // Edit property function
@@ -100,7 +102,7 @@ async function editProperty(id) {
   document.getElementById('notes').value = data.notes;
 
   currentEditingId = id; // Set the currentEditingId to the property being edited
-  showPage('formPage');
+  showPage('formPage'); // Switch to form page for editing
 }
 
 // Delete property function
@@ -112,7 +114,7 @@ async function deleteProperty(id) {
       alert('❌ Failed to delete: ' + error.message);
     } else {
       alert('✅ Property deleted!');
-      fetchData();
+      fetchData(); // Refresh the table after deletion
     }
   }
 }
@@ -127,6 +129,6 @@ function showPage(pageId) {
 
 // Initialize the page on DOM content loaded
 document.addEventListener('DOMContentLoaded', () => {
-  fetchData();
-  showPage('tablePage');
+  fetchData(); // Fetch and display data when page loads
+  showPage('tablePage'); // Show the table page
 });
