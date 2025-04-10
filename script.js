@@ -17,34 +17,7 @@ async function fetchData(query = '') {
   }
 
   if (query) {
-    data = data.filter((row) => {
-      return (
-        row.name.toLowerCase().includes(query.toLowerCase()) ||
-        row.location.toLowerCase().includes(query.toLowerCase()) ||
-        row.status.toLowerCase().includes(query.toLowerCase())
-      );
-    });
-  }
-
-  const tableBody = document.getElementById('data-table-body');
-  tableBody.innerHTML = '';
-
-  if (data.length === 0) {
-    tableBody.innerHTML = '<tr><td colspan="10">No matching properties found.</td></tr>';
-    return;
-  }
-
-  const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD
-
-async function fetchData(query = '') {
-  let { data, error } = await supabaseClient.from(tableName).select('*');
-
-  if (error) {
-    alert('❌ Failed to load data: ' + error.message);
-    return;
-  }
-
-  if (query) {
+    // Filter the data based on the search query
     data = data.filter((row) => {
       return (
         row.name.toLowerCase().includes(query.toLowerCase()) ||
@@ -63,14 +36,7 @@ async function fetchData(query = '') {
   }
 
   data.forEach((row) => {
-    const isFollowUpToday = row.followup === today; // Check if follow-up date is today
     const tr = document.createElement('tr');
-    tr.style.backgroundColor = isFollowUpToday ? '#fff3cd' : 'transparent'; // Highlight if today
-
-    if (isFollowUpToday) {
-      showFollowUpNotification(row); // Show notification if follow-up is today
-    }
-
     tr.innerHTML = `
       <td>${row.name}</td>
       <td>${row.phone}</td>
@@ -91,24 +57,6 @@ async function fetchData(query = '') {
   });
 }
 
-// Show follow-up notification if it's today's date
-function showFollowUpNotification(row) {
-  if (Notification.permission === 'granted') {
-    new Notification(`📌 Follow-up Today`, {
-      body: `${row.name} (${row.phone}) - ${row.notes || 'No notes'}`,
-    });
-  } else if (Notification.permission !== 'denied') {
-    Notification.requestPermission().then((permission) => {
-      if (permission === 'granted') {
-        new Notification(`📌 Follow-up Today`, {
-          body: `${row.name} (${row.phone}) - ${row.notes || 'No notes'}`,
-        });
-      }
-    });
-  }
-}
-
-
 // Handle form submission for both adding and updating properties
 document.getElementById('addForm').addEventListener('submit', async function (e) {
   e.preventDefault();
@@ -126,14 +74,16 @@ document.getElementById('addForm').addEventListener('submit', async function (e)
   };
 
   if (currentEditingId) {
+    // Update the existing record
     const { error } = await supabaseClient.from(tableName).update(formData).eq('id', currentEditingId);
     if (error) {
       alert('❌ Failed to update: ' + error.message);
     } else {
       alert('✅ Property updated!');
     }
-    currentEditingId = null;
+    currentEditingId = null; // Reset the current editing ID after update
   } else {
+    // Insert a new property
     const { error } = await supabaseClient.from(tableName).insert([formData]);
     if (error) {
       alert('❌ Failed to insert: ' + error.message);
@@ -142,12 +92,12 @@ document.getElementById('addForm').addEventListener('submit', async function (e)
     }
   }
 
-  resetForm();
-  fetchData();
+  resetForm(); // Reset form after adding or updating
+  fetchData(); // Refresh the table data
   showPage('tablePage');
 });
 
-// Reset form fields
+// Reset form fields after add or update
 function resetForm() {
   document.getElementById('name').value = '';
   document.getElementById('phone').value = '';
@@ -160,7 +110,7 @@ function resetForm() {
   document.getElementById('notes').value = '';
 }
 
-// Edit property
+// Edit property function
 async function editProperty(id) {
   const { data, error } = await supabaseClient.from(tableName).select('*').eq('id', id).single();
 
@@ -169,6 +119,7 @@ async function editProperty(id) {
     return;
   }
 
+  // Populate form fields with the existing data
   document.getElementById('name').value = data.name;
   document.getElementById('phone').value = data.phone;
   document.getElementById('email').value = data.email;
@@ -179,11 +130,11 @@ async function editProperty(id) {
   document.getElementById('status').value = data.status;
   document.getElementById('notes').value = data.notes;
 
-  currentEditingId = id;
+  currentEditingId = id; // Set the currentEditingId to the property being edited
   showPage('formPage');
 }
 
-// Delete property
+// Delete property function
 async function deleteProperty(id) {
   const confirmDelete = confirm('Are you sure you want to delete this property?');
   if (confirmDelete) {
@@ -192,18 +143,18 @@ async function deleteProperty(id) {
       alert('❌ Failed to delete: ' + error.message);
     } else {
       alert('✅ Property deleted!');
-      fetchData();
+      fetchData(); // Refresh the table data
     }
   }
 }
 
-// Search properties
+// Search properties function
 function searchProperties() {
   const query = document.getElementById('searchInput').value;
-  fetchData(query);
+  fetchData(query); // Fetch data with search query
 }
 
-// Show correct page
+// Show the correct page (form or table)
 function showPage(pageId) {
   document.querySelectorAll('.page').forEach((page) => {
     page.style.display = 'none';
@@ -211,8 +162,8 @@ function showPage(pageId) {
   document.getElementById(pageId).style.display = 'block';
 }
 
-// On page load
+// Initialize the page on DOM content loaded
 document.addEventListener('DOMContentLoaded', () => {
-  fetchData();
+  fetchData(); // Load initial data
   showPage('tablePage');
 });
